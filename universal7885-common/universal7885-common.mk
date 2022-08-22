@@ -115,7 +115,7 @@ PRODUCT_PACKAGES += \
 
 # Charger
 PRODUCT_PACKAGES += \
-    libsuspend
+    charger_res_images_vendor
 
 # ConfigStore
 PRODUCT_PACKAGES += \
@@ -163,9 +163,8 @@ PRODUCT_PACKAGES += \
 
 # Health
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.1-impl \
-    android.hardware.health@2.1-impl.recovery \
-    android.hardware.health@2.1-service
+    android.hardware.health-service.samsung \
+    android.hardware.health-service.samsung-recovery
 
 # HIDL
 PRODUCT_PACKAGES += \
