@@ -15,6 +15,9 @@
 # limitations under the License.
 
 import common
+import os
+from os.path import isfile as exists
+from os.path import dirname, basename
 
 def FullOTA_Assertions(info):
   OTA_Assertions(info)
@@ -51,9 +54,10 @@ def PrintInfo(info, dest):
   info.script.Print("Patching {} image unconditionally...".format(dest.split('/')[-1]))
 
 def OTA_InstallEnd(info):
-  AddImage(info, "RADIO/", "eureka_dtb.img", "/dev/block/platform/13500000.dwmmc0/by-name/dtb")
-  AddImage(info, "RADIO/", "eureka_dtbo.img", "/dev/block/platform/13500000.dwmmc0/by-name/dtbo")
-  AddFile(info, "RADIO/", "eureka_install.sh")
-  info.script.AppendExtra('package_extract_file("eureka_install.sh", "/tmp/eureka_install.sh");')
-  info.script.AppendExtra('run_program("/sbin/sh", "/tmp/eureka_install.sh");')
+  if os.path.exists("RADIO/eureka_dtb.img"):
+    AddImage(info, "RADIO/", "eureka_dtb.img", "/dev/block/platform/13500000.dwmmc0/by-name/dtb")
+    AddImage(info, "RADIO/", "eureka_dtbo.img", "/dev/block/platform/13500000.dwmmc0/by-name/dtbo")
+    AddFile(info, "RADIO/", "eureka_install.sh")
+    info.script.AppendExtra('package_extract_file("eureka_install.sh", "/tmp/eureka_install.sh");')
+    info.script.AppendExtra('run_program("/sbin/sh", "/tmp/eureka_install.sh");')
   return

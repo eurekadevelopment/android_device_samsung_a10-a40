@@ -1,0 +1,8 @@
+allow tee {mnt_vendor_file tee_efs_file}:dir r_dir_perms;
+allow tee {tee_efs_file efs_file}:{file lnk_file} r_file_perms;
+
+# gatekeeper hal stuff (too permissive rewrite eta s0n)
+
+allow hal_gatekeeper_default efs_file:lnk_file r_file_perms;
+allow hal_gatekeeper_default {tee_efs_file sec_efs_file}:dir r_dir_perms;
+allow hal_gatekeeper_default tee_efs_file:file rw_file_perms;

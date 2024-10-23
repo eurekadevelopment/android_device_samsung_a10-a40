@@ -1,0 +1,5 @@
+# Health
+vendor.samsung.hardware.health::ISehHealth                                                  u:object_r:hal_health_hwservice:s0
+
+# Thermal
+vendor.samsung.hardware.thermal::ISehThermal                                                u:object_r:hal_thermal_samsung_hwservice:s0

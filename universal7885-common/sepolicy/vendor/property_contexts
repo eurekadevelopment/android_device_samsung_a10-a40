@@ -40,3 +40,6 @@ ro.factory.factory_binary    u:object_r:vendor_factory_prop:s0
 
 # Wlan
 vendor.wlan.                 u:object_r:vendor_wifi_prop:s0
+
+# Gender neutral EFS partitions
+ro.efspartitions.	u:object_r:vendor_efspartition_prop:s0

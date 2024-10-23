@@ -100,6 +100,8 @@ void vendor_load_properties() {
   isNFC |= model == "SM-A202F";
   isNFC |= model == "SM-A405FM";
   isNFC |= model == "SM-A405F";
+  isNFC |= model == "SM-A530F";
+  isNFC |= model == "SM-A530W";
 
   // Set the NFC property, if NFC is present via modelname.
   if (isNFC) {

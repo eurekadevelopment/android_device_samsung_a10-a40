@@ -1,0 +1,10 @@
+# Factoryapp health
+/efs/FactoryApp(/.*)?                        u:object_r:app_efs_file:s0
+
+# Health and thermal
+/(vendor|system/vendor)/bin/hw/vendor.samsung.hardware.thermal@1.0-service                                  u:object_r:hal_thermal_default_exec:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.health@2\.1-service-samsung                               u:object_r:hal_health_default_exec:s0
+
+# TEE
+/mnt/vendor/efs/TEE(/.*)?                      u:object_r:tee_efs_file:s0
+/efs/TEE(/.*)?                      u:object_r:tee_efs_file:s0

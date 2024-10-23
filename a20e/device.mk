@@ -2,6 +2,7 @@ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
 TARGET_SOC := exynos7884B
 TARGET_LOCAL_ARCH := arm64
+TARGET_TEE_KERNEL := teegris
 
 # Inherit common device configuration
 $(call inherit-product, device/samsung/universal7885-common/universal7885-common.mk)

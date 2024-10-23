@@ -40,6 +40,12 @@ prebuilt_etc {
 }
 
 prebuilt_etc {
+    name: "fstab.samsungexynos7885",
+    src: "etc/fstab.samsungexynos7885",
+    vendor: true,
+}
+
+prebuilt_etc {
     name: "fstab.exynos7884B",
     src: "etc/fstab.exynos7885",
     vendor: true,
@@ -68,6 +74,13 @@ prebuilt_etc {
 prebuilt_etc {
     name: "init.udfps.rc",
     src: "etc/init.udfps.rc",
+    sub_dir: "init",
+    vendor: true,
+}
+
+prebuilt_etc {
+    name: "mobicore.rc",
+    src: "etc/mobicore.rc",
     sub_dir: "init",
     vendor: true,
 }

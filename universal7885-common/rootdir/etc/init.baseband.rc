@@ -1,8 +1,16 @@
+on early-init && property:ro.product.vendor.device=jackpotlte
+    setprop ro.efspartitions.radio "RADIO"
+    setprop ro.efspartitions.cpefs "CPEFS"
+
+on early-init && property:ro.product.vendor.device!=jackpotlte
+    setprop ro.efspartitions.radio "radio"
+    setprop ro.efspartitions.cpefs "cpefs"
+
 on early-init
     mkdir /mnt/vendor/cpefs 0771 radio system
 
 on init
-    symlink /dev/block/platform/13500000.dwmmc0/by-name/radio /dev/mbin0
+    symlink /dev/block/platform/13500000.dwmmc0/by-name/${ro.efspartitions.radio} /dev/mbin0
     restorecon /dev/mbin0
 
     write /proc/sys/net/core/netdev_max_backlog 5000
@@ -17,16 +25,16 @@ on init
     write /sys/class/net/rmnet7/queues/rx-0/rps_cpus 6
 
 on fs && property:ro.boot.cpefs_wp=0
-    wait /dev/block/platform/13500000.dwmmc0/by-name/cpefs
-    mount ext4 /dev/block/platform/13500000.dwmmc0/by-name/cpefs /mnt/vendor/cpefs nosuid nodev noatime noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic
+    wait /dev/block/platform/13500000.dwmmc0/by-name/${ro.efspartitions.cpefs}
+    mount ext4 /dev/block/platform/13500000.dwmmc0/by-name/${ro.efspartitions.cpefs} /mnt/vendor/cpefs nosuid nodev noatime noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic
     mount none /mnt/vendor/cpefs /cpefs bind
     restorecon_recursive /mnt/vendor/cpefs
     chown radio system /mnt/vendor/cpefs
     chmod 0771 /mnt/vendor/cpefs
 
 on fs && property:ro.boot.cpefs_wp=1
-    wait /dev/block/platform/13500000.dwmmc0/by-name/cpefs
-    mount ext4 /dev/block/platform/13500000.dwmmc0/by-name/cpefs /mnt/vendor/cpefs ro nosuid nodev noatime noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic
+    wait /dev/block/platform/13500000.dwmmc0/by-name/${ro.efspartitions.cpefs}
+    mount ext4 /dev/block/platform/13500000.dwmmc0/by-name/${ro.efspartitions.cpefs} /mnt/vendor/cpefs ro nosuid nodev noatime noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic
     mount none /mnt/vendor/cpefs /cpefs bind
     restorecon_recursive /mnt/vendor/cpefs
     chown radio system /mnt/vendor/cpefs
@@ -42,7 +50,7 @@ on post-fs-data
     chmod 0600 /mnt/vendor/efs/factory.prop
 
 # Modem boot daemon
-service cpboot-daemon /vendor/bin/cbd -d -tss310 -bm -mm -P platform/13500000.dwmmc0/by-name/radio
+service cpboot-daemon /vendor/bin/cbd -d -tss310 -bm -mm -P platform/13500000.dwmmc0/by-name/${ro.efspartitions.radio}
     class main
     user root
     group radio cache inet misc audio sdcard_rw log sdcard_r shell system

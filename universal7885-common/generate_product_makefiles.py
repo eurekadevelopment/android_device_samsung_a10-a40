@@ -1,3 +1,4 @@
+import re
 import os
 from os.path import isfile as exists
 from os.path import dirname, basename
@@ -56,10 +57,11 @@ class GenerateMK():
     def write_makefiles(self):
          devices = os.listdir(DEVICE_BASE)
          for i in devices:
-            if not i[:1] == 'a':
+            ax0 = re.search("^jackpot.*|^a.*0", i)
+            if not ax0:
                 log(f'Skip entry: {i}')
                 continue
-            self.write_one_dev_makefile(i)
+            self.write_one_dev_makefile(ax0.group())
 
     def check_makefile(self, mk):
         log(f'Check MK => {mk}')

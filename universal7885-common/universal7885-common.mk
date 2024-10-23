@@ -3,6 +3,9 @@ ifeq ($(TARGET_LOCAL_ARCH),arm64)
 $(call inherit-product, vendor/samsung/universal7885-common/universal7885-common-vendor.mk)
 endif
 
+# Call SEPolicy blob setup
+$(call inherit-product, vendor/samsung/$(TARGET_TEE_KERNEL)/$(TARGET_TEE_KERNEL)-vendor.mk)
+
 # Soong namespaces
 $(call inherit-product, hardware/samsung_slsi-linaro/config/config.mk)
 
@@ -177,16 +180,26 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    fstab.$(TARGET_SOC) \
     fstab.enableswap \
-    init.exynos7885.rc \
     init.exynos7885.usb.rc \
     wifi_sec.rc \
     init.target.rc \
     init.baseband.rc
 
+# If the device shipped pie, use fstabs with pie partition names
+ifeq ($(BOARD_SEPOLICY_TEE_FLAVOR),teegris)
+PRODUCT_PACKAGES += \
+    fstab.$(TARGET_SOC) \
+    init.exynos7885.rc
+
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/etc/fstab.exynos7885:$(TARGET_COPY_OUT_RAMDISK)/fstab.$(TARGET_SOC)
+else
+# TODO - change the fstab name back fstab.exynos7885 for eureka. Right now, using nameless.
+# TODO - commonize init
+PRODUCT_PACKAGES += \
+    fstab.samsungexynos7885 
+endif
 
 ifeq ($(TARGET_HAS_UDFPS),true)
 PRODUCT_PACKAGES += \
@@ -202,10 +215,19 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/keylayout/Codec3035_Headset_Events.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/Codec3035_Headset_Events.kl \
     $(LOCAL_PATH)/configs/keylayout/uinput-sec-fp.kl:$(TARGET_COPY_OUT_VENDOR)/usr/keylayout/uinput-sec-fp.kl
 
-# Keymaster
+# Keymaster and secure element
+ifeq ($(BOARD_SEPOLICY_TEE_FLAVOR),teegris)
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.0-service.samsung \
     libkeymaster4_1support.vendor
+else
+PRODUCT_PACKAGES += \
+    mobicore.rc \
+    android.hardware.secure_element@1.0 \
+    android.hardware.secure_element@1.1 \
+    android.hardware.secure_element@1.2 \
+    android.hardware.keymaster@4.0-service
+endif
 
 # Media
 PRODUCT_COPY_FILES += \
@@ -226,8 +248,13 @@ PRODUCT_PACKAGES += \
     NfcNci \
     Tag
 
+ifeq ($(BOARD_SEPOLICY_TEE_FLAVOR),teegris)
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/nfc/libnfc-sec-vendor.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-sec-vendor.conf
+    $(LOCAL_PATH)/configs/nfc/s3nrn82.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-sec-vendor.conf
+else
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/nfc/s3nrn81.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-sec-vendor.conf
+endif
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -356,9 +383,13 @@ PRODUCT_PACKAGES += \
     SmartCharge
 
 PRODUCT_PACKAGES += \
-    vendor.lineage.touch@1.0-service.samsung \
-    vendor.lineage.touch@1.0-service.ss \
     vendor.lineage.fastcharge@1.0-service.samsung
+
+ifeq ($(BOARD_SEPOLICY_TEE_FLAVOR),teegris)
+PRODUCT_PACKAGES += \
+    vendor.lineage.touch@1.0-service.samsung \
+    vendor.lineage.touch@1.0-service.ss 
+endif
 
 # Sensors
 PRODUCT_PACKAGES += \

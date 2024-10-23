@@ -71,12 +71,14 @@ TARGET_KERNEL_SOURCE := kernel/samsung/exynos7885
 KERNEL_SUPPORTS_LLVM_TOOLS := true
 TARGET_KERNEL_OPTIONAL_LD := true
 TARGET_KERNEL_ADDITIONAL_FLAGS += HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
-TARGET_KERNEL_CLANG_VERSION := vortex
+#TARGET_KERNEL_CLANG_VERSION := vortex
 
 BOARD_USES_METADATA_PARTITION := true
 
 # Keymaster
+ifeq ($(BOARD_SEPOLICY_TEE_FLAVOR),teegris)
 TARGET_KEYMASTER_VARIANT := samsung
+endif
 
 # HIDL
 include device/samsung/universal7885-common/configs/vintf/manifest.mk
@@ -96,6 +98,11 @@ TARGET_VENDOR_PROP += $(COMMON_PATH)/configs/vendor_64.prop
 else
 TARGET_VENDOR_PROP += $(COMMON_PATH)/configs/vendor_32.prop
 endif
+ifeq ($(TARGET_TEE_KERNEL),teegris)
+TARGET_VENDOR_PROP += $(COMMON_PATH)/configs/efspie.prop
+else
+TARGET_VENDOR_PROP += $(COMMON_PATH)/configs/efsnougat.prop
+endif
 
 # Recovery
 BOARD_HAS_DOWNLOAD_MODE := true
@@ -107,14 +114,14 @@ TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)/releasetools
 # RIL
 ENABLE_VENDOR_RIL_SERVICE := true
 
-BOARD_ROOT_EXTRA_FOLDERS := factory
+BOARD_ROOT_EXTRA_FOLDERS := efs
+BOARD_ROOT_EXTRA_FOLDERS := factory 
 BOARD_ROOT_EXTRA_SYMLINKS := /factory:/efs
 
-BOARD_SEPOLICY_TEE_FLAVOR := teegris
+# Sepolicy
+BOARD_SEPOLICY_TEE_FLAVOR := $(TARGET_TEE_KERNEL)
 include device/samsung_slsi/sepolicy/sepolicy.mk
 include hardware/samsung-ext/interfaces/sepolicy/SEPolicy.mk
-
-# Sepolicy
 BOARD_VENDOR_SEPOLICY_DIRS += \
     $(COMMON_PATH)/sepolicy/vendor
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += \

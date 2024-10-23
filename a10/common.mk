@@ -3,6 +3,7 @@ DEVICE_PACKAGE_OVERLAYS += device/samsung/a10/overlay
 TARGET_BOARD_CAMERA_COUNT := 2
 TARGET_BOARD_HAS_FP := false
 TARGET_SOC := exynos7884B
+TARGET_TEE_KERNEL := teegris
 
 # Inherit common device configuration
 $(call inherit-product, device/samsung/universal7885-common/universal7885-common.mk)
