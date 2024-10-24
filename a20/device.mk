@@ -27,4 +27,4 @@ PRODUCT_PACKAGES += \
 BUILD_FINGERPRINT := "samsung/a20ub/a20:11/RP1A.200720.012/A205GUBU9CUF4:user/release-keys"
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-   PRIVATE_BUILD_DESC="a20ub-user 11 RP1A.200720.012 A205GUBU9CUF4 release-keys"
+   BuildDesc=$(call normalize-path-list,"a20ub-user 11 RP1A.200720.012 A205GUBU9CUF4 release-keys")

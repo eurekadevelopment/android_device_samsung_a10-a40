@@ -19,4 +19,4 @@ TARGET_SCREEN_WIDTH := 720
 BUILD_FINGERPRINT := "samsung/a10kx/a10:11/RP1A.200720.012/A105NKOU5CUL4:user/release-keys"
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-   PRIVATE_BUILD_DESC="a10kx-user 11 RP1A.200720.012 A105NKOU5CUL4 release-keys"
+   BuildDesc=$(call normalize-path-list,"a10kx-user 11 RP1A.200720.012 A105NKOU5CUL4 release-keys")
