@@ -23,3 +23,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PACKAGES += \
    android.hardware.sensors@1.0-service
+
+BUILD_FINGERPRINT := "samsung/a20ektt/a20e:11/RP1A.200720.012/A202KKKU8CUL3:user/release-keys"
+PRODUCT_BUILD_PROP_OVERRIDES += \
+   BuildDesc=$(call normalize-path-list,"a20ektt-user 11 RP1A.200720.012 A202KKKU8CUL3 release-keys")
